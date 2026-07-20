@@ -1,0 +1,108 @@
+---
+description: Spring Boot + Java 25 best practices for apptdea service development
+alwaysApply: true
+---
+
+# Spring Boot / Java 25 — apptdea
+
+Apply these conventions on every change to this project.
+
+## Stack
+
+- Spring Boot 4.x, Maven, package base `com.udea.apptdea`
+- Data: Spring Data JPA + PostgreSQL
+- API docs: springdoc-openapi
+- Prefer modern Java (records, pattern matching, sealed types, virtual threads where appropriate)
+
+## Naming (always English)
+
+- Classes, interfaces, methods, fields, parameters, packages, and constants: **English only**
+- Controllers: `*Controller` · Services: `*Service` · Repositories: `*Repository`
+- Entities: domain nouns (`User`, `Order`) · Exceptions: `*Exception`
+- Packages: lowercase (`controller`, `service`, `repository`, `domain`, `dto`, `config`, `mapper`)
+
+## Javadoc (mandatory)
+
+- Every **public** method must have up-to-date Javadoc (`@param`, `@return`, `@throws` when relevant)
+- Public classes and records: class-level Javadoc describing responsibility
+- Update Javadoc when behavior or signature changes — never leave stale docs
+
+```java
+/**
+ * Creates a new user from the given request.
+ *
+ * @param request payload with user data
+ * @return the persisted user as a response DTO
+ * @throws UserAlreadyExistsException if email is already registered
+ */
+public UserResponse create(CreateUserRequest request) { ... }
+```
+
+## DTOs
+
+- Use **Java records** for all request/response DTOs — no mutable DTO classes
+- Place under `com.udea.apptdea.dto` (or feature subpackages)
+- Prefer validation annotations on record components (`@NotBlank`, `@Email`, etc.)
+
+```java
+public record CreateUserRequest(
+    @NotBlank String email,
+    @NotBlank String fullName
+) {}
+```
+
+## Layering
+
+| Layer | Package | Responsibility |
+|-------|---------|----------------|
+| Controller | `...controller` | HTTP only; validate input; map to/from DTOs |
+| Service | `...service` | Business logic; transactions (`@Transactional`) |
+| Repository | `...repository` | Persistence; Spring Data interfaces |
+| Domain | `...domain` / `...entity` | JPA entities |
+| DTO | `...dto` | Records for API contracts |
+| Config | `...config` | `@Configuration` beans |
+
+- Constructor injection only (no `@Autowired` on fields)
+- Prefer `@RestController` + `@RequestMapping` / HTTP verb mappings
+- Return DTOs from controllers — never expose JPA entities in the API
+- Keep services focused; avoid fat controllers
+
+## Java / Spring practices
+
+- Prefer `Optional` at service boundaries; do not return `null` from public APIs
+- Use pattern matching (`instanceof`, `switch`) instead of cascading casts
+- Prefer sealed hierarchies for closed domain/error types when useful
+- Prefer virtual threads for blocking I/O-bound workloads when enabled in the app
+- Fail fast with clear domain exceptions; map them via `@ControllerAdvice`
+- Keep methods small and single-purpose; avoid deep nesting
+- Prefer immutable data and final fields where possible
+- Configuration via `application.properties` / profiles — no hardcoded secrets
+
+## Testing
+
+- Mirror package structure under `src/test/java`
+- Unit-test services; slice/integration-test controllers and repositories as needed
+- Public test helpers follow the same naming and Javadoc rules when public
+
+## Project structure
+
+```
+apptdea/
+├── pom.xml
+├── mvnw / mvnw.cmd
+├── .cursor/rules/
+│   └── springboot.mdc
+├── src/
+│   ├── main/
+│   │   ├── java/com/udea/apptdea/
+│   │   │   └── ApptdeaApplication.java
+│   │   └── resources/
+│   │       ├── application.properties
+│   │       ├── static/
+│   │       └── templates/
+│   └── test/
+│       └── java/com/udea/apptdea/
+│           └── ApptdeaApplicationTests.java
+```
+
+When adding features, extend under `com.udea.apptdea` with the layer packages above (do not invent alternate roots).
