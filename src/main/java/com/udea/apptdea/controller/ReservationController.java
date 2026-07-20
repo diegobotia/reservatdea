@@ -80,7 +80,7 @@ public class ReservationController {
      * Cancels a reservation by its identifier.
      *
      * @param id reservation identifier
-     * @return HTTP 204 when the reservation is cancelled
+     * @return HTTP 204 No Content; the cancelled entity is not included in the response
      * @throws ReservationBusinessException if the reservation cannot be cancelled
      */
     @DeleteMapping("/{id}")

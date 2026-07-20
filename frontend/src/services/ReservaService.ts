@@ -6,24 +6,37 @@ import axios from 'axios';
 export type ReservationStatus = 'ACTIVE' | 'CANCELLED';
 
 /**
+ * ISO-8601 calendar date (`yyyy-MM-dd`) accepted by Spring {@code LocalDate}.
+ */
+export type IsoLocalDate = `${number}-${number}-${number}`;
+
+/**
+ * ISO-8601 local time (`HH:mm` or `HH:mm:ss`) accepted by Spring {@code LocalTime}.
+ */
+export type IsoLocalTime = `${number}:${number}` | `${number}:${number}:${number}`;
+
+/**
  * Reservation payload returned by {@code GET /reservas}.
+ * Date/time fields mirror Jackson serialization of {@code LocalDate} / {@code LocalTime}.
  */
 export interface Reservation {
   id: number;
   customerName: string;
-  reservationDate: string;
-  reservationTime: string;
+  reservationDate: IsoLocalDate;
+  reservationTime: IsoLocalTime;
   serviceName: string;
   status: ReservationStatus;
 }
 
 /**
  * Payload required to create a reservation ({@code POST /reservas}).
+ * Matches {@code com.udea.apptdea.dto.CreateReservationRequest}:
+ * {@code LocalDate} / {@code LocalTime} on the wire as ISO-8601 strings.
  */
 export interface CreateReservationRequest {
   customerName: string;
-  reservationDate: string;
-  reservationTime: string;
+  reservationDate: IsoLocalDate;
+  reservationTime: IsoLocalTime;
   serviceName: string;
 }
 
@@ -53,7 +66,7 @@ const ReservaService = {
   /**
    * Creates a new reservation.
    *
-   * @param reserva payload matching {@code CreateReservationRequest}
+   * @param reserva payload matching {@link CreateReservationRequest}
    * @returns HTTP 201 with the created reservation
    */
   crear(reserva: CreateReservationRequest) {

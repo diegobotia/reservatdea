@@ -1,6 +1,7 @@
 import { createElement, useCallback, useState } from 'react';
 import type { FormEvent } from 'react';
 import ReservaService from '../../services/ReservaService';
+import type { IsoLocalDate, IsoLocalTime } from '../../services/ReservaService';
 import { SERVICIOS_DISPONIBLES } from '../../constants/servicios';
 import { getApiErrorMessage } from '../../utils/apiError';
 import ReservaFormTemplate from './ReservaForm.jsx';
@@ -71,10 +72,21 @@ function validate(values: ReservaFormValues): Partial<Record<keyof ReservaFormVa
  * Normalizes an HTML time value ({@code HH:mm}) to {@code HH:mm:ss} for the API.
  *
  * @param hora time from the form
- * @returns time string accepted by Spring {@code LocalTime}
+ * @returns ISO local time accepted by Spring {@code LocalTime}
  */
-function toApiTime(hora: string): string {
-  return hora.length === 5 ? `${hora}:00` : hora;
+function toApiTime(hora: string): IsoLocalTime {
+  const normalized = hora.length === 5 ? `${hora}:00` : hora;
+  return normalized as IsoLocalTime;
+}
+
+/**
+ * Maps an HTML date input value to the API date contract.
+ *
+ * @param fecha date from the form ({@code yyyy-MM-dd})
+ * @returns ISO local date accepted by Spring {@code LocalDate}
+ */
+function toApiDate(fecha: string): IsoLocalDate {
+  return fecha as IsoLocalDate;
 }
 
 /**
@@ -116,7 +128,7 @@ export default function ReservaForm({ onCreated, onError }: ReservaFormProps) {
       try {
         await ReservaService.crear({
           customerName: values.nombreCliente.trim(),
-          reservationDate: values.fecha,
+          reservationDate: toApiDate(values.fecha),
           reservationTime: toApiTime(values.hora),
           serviceName: values.servicio,
         });
