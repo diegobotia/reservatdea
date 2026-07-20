@@ -79,14 +79,14 @@ public class ReservationService {
 
     /**
      * Cancels an existing active reservation by its identifier.
+     * Persists the cancelled status; callers receive no entity body (HTTP 204 at the API).
      *
      * @param id identifier of the reservation to cancel
-     * @return cancelled reservation
      * @throws ReservationBusinessException if the reservation does not exist or
      * is already cancelled
      */
     @Transactional
-    public Reservation cancelReservation(Long id) {
+    public void cancelReservation(Long id) {
         if (id == null) {
             throw new ReservationBusinessException(
                     INVALID,
@@ -108,7 +108,7 @@ public class ReservationService {
         }
 
         reservation.setStatus(ReservationStatus.CANCELLED);
-        return reservationRepository.save(reservation);
+        reservationRepository.save(reservation);
     }
 
     private void validateSchedule(Reservation reservation) {
