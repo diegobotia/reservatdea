@@ -1,0 +1,29 @@
+:root {
+  color: #1a2332;
+  background: #eef2f6;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% -10%, #d4e8e0 0%, transparent 55%),
+    radial-gradient(ellipse 70% 40% at 100% 0%, #d9e3f0 0%, transparent 50%),
+    #eef2f6;
+}
+
+#root {
+  width: 100%;
+  min-height: 100svh;
+  margin: 0;
+  text-align: initial;
+}

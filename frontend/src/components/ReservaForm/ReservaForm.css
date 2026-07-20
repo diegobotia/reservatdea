@@ -1,0 +1,122 @@
+.reserva-form {
+  --rf-ink: #1a2332;
+  --rf-muted: #5c6b7a;
+  --rf-line: #d5dde5;
+  --rf-surface: #fff;
+  --rf-accent: #0f6e56;
+  --rf-accent-hover: #0b5542;
+  --rf-danger: #9b1c1c;
+  --rf-font: 'Segoe UI', 'Helvetica Neue', sans-serif;
+
+  width: min(960px, 100%);
+  margin: 0 auto;
+  padding: 2rem 1.25rem 0;
+  color: var(--rf-ink);
+  font-family: var(--rf-font);
+}
+
+.reserva-form__header {
+  margin-bottom: 1.25rem;
+}
+
+.reserva-form__header h2 {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.reserva-form__header p {
+  margin: 0;
+  color: var(--rf-muted);
+  font-size: 0.95rem;
+}
+
+.reserva-form__form {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--rf-line);
+  border-radius: 8px;
+  background: var(--rf-surface);
+}
+
+.reserva-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.reserva-form__field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.reserva-form__field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--rf-muted);
+}
+
+.reserva-form__field input,
+.reserva-form__field select {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--rf-line);
+  border-radius: 6px;
+  background: #f7f9fb;
+  color: var(--rf-ink);
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+.reserva-form__field input:focus,
+.reserva-form__field select:focus {
+  outline: 2px solid rgba(15, 110, 86, 0.35);
+  outline-offset: 1px;
+  border-color: var(--rf-accent);
+  background: #fff;
+}
+
+.reserva-form__field input[aria-invalid='true'],
+.reserva-form__field select[aria-invalid='true'] {
+  border-color: var(--rf-danger);
+}
+
+.reserva-form__error {
+  color: var(--rf-danger);
+  font-size: 0.8rem;
+}
+
+.reserva-form__submit {
+  justify-self: start;
+  appearance: none;
+  border: none;
+  border-radius: 6px;
+  padding: 0.7rem 1.25rem;
+  background: var(--rf-accent);
+  color: #fff;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.reserva-form__submit:hover:not(:disabled) {
+  background: var(--rf-accent-hover);
+}
+
+.reserva-form__submit:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+@media (max-width: 720px) {
+  .reserva-form {
+    padding: 1.25rem 0.75rem 0;
+  }
+
+  .reserva-form__row {
+    grid-template-columns: 1fr;
+  }
+}
